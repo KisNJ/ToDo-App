@@ -1,0 +1,39 @@
+*{
+  margin:0;
+  font-family: 'Roboto', sans-serif;  
+}
+#app{
+  min-height: 100vh;
+}
+
+header{
+  padding-left:45px;
+  display: flex;
+  align-items: center;
+  background-color: #0f172a;
+  color:#f8fafc;
+  font-size: 1.6rem;
+  font-weight: bold;
+  height: 10vh;
+  gap:15px;
+  box-shadow:1px 1px 4px 0px #475569;
+  position: relative;
+  z-index: 11;
+}
+header img{
+  filter: invert(100%) sepia(10%) saturate(1937%) hue-rotate(177deg) brightness(101%) contrast(98%);
+}
+main{
+  height: calc(100vh - 10vh);
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+}
+nav{
+  height: 100%;
+  box-shadow:1px 1px 4px 0px #475569;
+  background-color: #475569;
+}
+#content{
+  background-color: #f8fafc;
+  z-index: 0;
+}
