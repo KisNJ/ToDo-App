@@ -1,12 +1,14 @@
 import React from 'react'
 import SubForm from './SubForm'
-export default function DisplayProject({ subTasks, mainTitle, deleteProject, saveChanges, priority,keyOfThis }) {
-    const notAllowed = ["mainTitle", "id"]
+export default function DisplayProject({ subTasks, mainTitle, deleteProject, saveChanges, priority, keyOfThis, completed, removeFromCompletedFullProject, completedYesOrNo }) {
+    const notAllowed = ["mainTitle", "id", "priority", "completed"]
     const [subTasksLocal, setSubTasksLocal] = React.useState({ ...subTasks })
     const [tempTasks, setTempTasks] = React.useState();
     const [mainTitleValue, setMainTitleValue] = React.useState({ mainTitle: mainTitle });
     const [priorityValue, setPriorityValue] = React.useState(parseInt(priority));
     const [pressedEdit, setPressedEdit] = React.useState(false)
+    const [completedValue, setCompletedValue] = React.useState(completedYesOrNo)
+    console.log(completedValue)
     function deleteTask(e) {
         setPressedEdit(true)
         let temp = { ...subTasksLocal }
@@ -35,8 +37,10 @@ export default function DisplayProject({ subTasks, mainTitle, deleteProject, sav
             }
 
         }
+        setPriorityValue(parseInt(priority))
         setTempTasks([...temp])
-    }, [subTasks, subTasks.id])
+        setCompletedValue(completedYesOrNo)
+    }, [subTasks, subTasks.id, priority, completedYesOrNo])
     React.useEffect(() => {
 
         let temp = []
@@ -53,11 +57,37 @@ export default function DisplayProject({ subTasks, mainTitle, deleteProject, sav
         }
         setTempTasks([...temp])
     }, [subTasksLocal])
+    function handleIndividualComplete(id, task) {
+        
+        if (task === "completed") {
+            let temp = { ...subTasksLocal }
+            for (let key in subTasksLocal) {
+                if (!notAllowed.includes(key)) {
+                    if (temp[key].id === parseInt(id)) {
+                        temp[key].completed = "yes"
+                    }
+                }
+            }
+            console.log(temp)
+            setSubTasksLocal({ ...temp })
+        } else {
+            let temp = { ...subTasksLocal }
+            for (let key in subTasksLocal) {
+                if (!notAllowed.includes(key)) {
+                    if (temp[key].id === parseInt(id)) {
+                        temp[key].completed = "no"
+                    }
+                }
+            }
+            setSubTasksLocal({ ...temp })
+        }
+    }
 
-    function taskCard({ title, description, dueDate, priority, id }) {
+    function taskCard({ title, description, dueDate, priority, id, completed }) {
         return (
-            <div>
+            <div style={completed === "yes" ? { backgroundColor: "gray" } : {}}>
                 <div>Title:{title} description:{description} dueDate:{dueDate}</div>
+                {completed !== "yes" ? <button onClick={() => handleIndividualComplete(id, "completed")}>Completed</button> : <button onClick={() => handleIndividualComplete(id, "giveBack")}>Give Back</button>}
                 <button id={id} onClick={deleteTask}>Delete Task</button>
             </div>
         )
@@ -90,7 +120,7 @@ export default function DisplayProject({ subTasks, mainTitle, deleteProject, sav
             }
         }
         setSubTasksLocal({ ...temp })
-        saveChanges(subTasks.id, subTasksLocal, mainTitleValue)
+        saveChanges(subTasks.id, subTasksLocal, mainTitleValue, priorityValue)
     }
     function addSubTask(e) {
         let ids = []
@@ -137,6 +167,10 @@ export default function DisplayProject({ subTasks, mainTitle, deleteProject, sav
             setSubTasksLocal({ ...temp })
         }
     }
+    function handleComplete() {
+        setCompletedValue("yes")
+        completed("project", { mainTitleValue, subTasksLocal })
+    }
     let color
     function whatColor() {
 
@@ -149,14 +183,14 @@ export default function DisplayProject({ subTasks, mainTitle, deleteProject, sav
         }
     }
     whatColor()
-    function increasePriority(){
+    function increasePriority() {
         if (priorityValue > 1) {
             setPriorityValue(0)
         } else {
-            setPriorityValue(old=>old+1)
-        }        
+            setPriorityValue(old => old + 1)
+        }
     }
-    
+
     function whatTitleToDisplay() {
         if (pressedEdit) {
             return (
@@ -180,6 +214,11 @@ export default function DisplayProject({ subTasks, mainTitle, deleteProject, sav
         }
 
     }
+    function handleGiveBack() {
+        setCompletedValue("no")
+        removeFromCompletedFullProject(subTasksLocal)
+    }
+
     return (
         <div>
             {whatTitleToDisplay()}
@@ -188,6 +227,7 @@ export default function DisplayProject({ subTasks, mainTitle, deleteProject, sav
                 <button id={subTasks.id} onClick={deleteThisProject}>Delete Project</button>
                 <button onClick={Edit}>Edit</button>
                 <button onClick={addSubTask}>Add sub task</button>
+                {completedValue !== "yes" ? <button onClick={handleComplete}>Completed</button> : <button onClick={handleGiveBack}>Give back</button>}
                 {pressedEdit ? <button onClick={saveChangesLocal}>Save Changes</button> : ""}
                 {/*pressedEdit?<button>Save Changes</button>:""*/}
             </div>

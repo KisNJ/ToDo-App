@@ -48,7 +48,7 @@ export default function AddProject(props) {
     function saveProject(e) {
         e.preventDefault();
         setSubTasks(old => old.filter(x => x.title !== ""))
-        console.log(subTasks)
+        
         let temp = [...subTasks]
         let dateObj = new Date();
         let month = dateObj.getUTCMonth() + 1; //months from 1-12
@@ -89,7 +89,7 @@ export default function AddProject(props) {
             <label htmlFor="project--title"></label>
             <input type="text" onChange={titleChange} id="project--title" />
             <div onClick={increasePriority}>
-                {console.log(priorityValue)}
+               
                 <div id="three" style={priorityValue > 1 ? { opacity: "1", color: color } : { opacity: "0" }} >-||-</div>
                 <div id="two" style={priorityValue > 0 ? { opacity: "1", color: color } : { opacity: "0" }}>-||-</div>
                 <div id="one" style={{ opacity: "1", color: color }}>-||-</div>
