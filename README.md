@@ -1,2 +1,2 @@
 # ToDo-App
-Still needs styling and the "completed" feature
+Odin project ToDo app.
