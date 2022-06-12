@@ -1,6 +1,9 @@
 import React from 'react'
-export default function DisplayTask({ title, description, dueDate, priority, id, edit, deleteT }) {
+export default function DisplayTask({ title, description, dueDate, priority, id, edit, deleteT, CompletedTask, completed, removeFromCompletedTask }) {
     const [pressedEdit, setPressedEdit] = React.useState(false)
+    const [completedValue, setCompletedValue] = React.useState(completed)
+
+    console.log(completedValue)
     const [formData, setFormData] = React.useState({
         title: title,
         description: description,
@@ -15,7 +18,8 @@ export default function DisplayTask({ title, description, dueDate, priority, id,
             dueDate: dueDate,
             priority: priority
         })
-    }, [title, description, priority, dueDate, id])
+        setCompletedValue(completed)
+    }, [title, description, priority, dueDate, id, completed])
     function editLocal() {
         setPressedEdit(true)
     }
@@ -27,7 +31,7 @@ export default function DisplayTask({ title, description, dueDate, priority, id,
         setFormData(old => ({ ...old, [id]: value }))
     }
     function saveChanges() {
-        edit(id, formData)
+        edit(id, formData, completedValue)
         setPressedEdit(false)
     }
     function increasePriority() {
@@ -51,28 +55,38 @@ export default function DisplayTask({ title, description, dueDate, priority, id,
         }
     }
     whatColor()
-    function complete(){
-        
+    function complete() {
+        setCompletedValue("yes")
+        CompletedTask({ title, description, dueDate, priority, id })
     }
+    function handleGiveBack() {
+        setCompletedValue("no")
+        removeFromCompletedTask(id)
+        //removeFromCompletedFullProject(subTasksLocal)
+    }
+    //console.log({ title, description, dueDate, priority, id,completedValue})
     function determine() {
         if (pressedEdit) {
             return (
-                <div>
-                    <label htmlFor="title" >Title</label>
-                    <input onChange={handleChange} value={formData.title} required type="text" name="title" id="title" />
-                    <label htmlFor="description">Description</label>
-                    <input onChange={handleChange} value={formData.description} required type="text" name="description" id="description" />
-                    <label htmlFor="dueDate">Due Date</label>
-                    <input onChange={handleChange} value={formData.dueDate} required type="date" name="dueDate" id="dueDate" />
-                    <div>Priority</div>
-                    <div onClick={increasePriority}>
-                        <div id="three" style={formData.priority > 1 ? { opacity: "1", color: color } : { opacity: "0" }} >-||-</div>
-                        <div id="two" style={formData.priority > 0 ? { opacity: "1", color: color } : { opacity: "0" }}>-||-</div>
-                        <div id="one" style={{ opacity: "1", color: color }}>-||-</div>
+                <div id="item">
+                    <div className='add-form'>
+                        <label htmlFor="title" >Title</label>
+                        <input onChange={handleChange} value={formData.title} required type="text" name="title" id="title" />
+                        <label htmlFor="description">Description</label>
+                        <input onChange={handleChange} value={formData.description} required type="text" name="description" id="description" />
+                        <label htmlFor="dueDate">Due Date</label>
+                        <input onChange={handleChange} value={formData.dueDate} required type="date" name="dueDate" id="dueDate" />
+                        <div className="priority-conatiner">
+                            <div className='priority'>Priority</div>
+                            <div className="priority-toggle" onClick={increasePriority}>
+                                <div id="one" style={{ opacity: "1", color: color }}>-||-</div>
+                                <div id="two" style={formData.priority > 0 ? { opacity: "1", color: color } : { opacity: "0" }}>-||-</div>
+                                <div id="three" style={formData.priority > 1 ? { opacity: "1", color: color } : { opacity: "0" }} >-||-</div>
+                            </div>
+                        </div>
+                        <button className="deleteBtn"onClick={deleteLocal}>Delete</button>
+                        <button onClick={saveChanges}>Save changes</button>
                     </div>
-                    <button>Edit</button>
-                    <button onClick={deleteLocal}>Delete</button>
-                    <button onClick={saveChanges}>Save changes</button>
                 </div>
             )
         }
@@ -80,24 +94,34 @@ export default function DisplayTask({ title, description, dueDate, priority, id,
 
             return (
 
-                <div>
-                    <div>Title:{title} description:{description} dueDate:{dueDate} priotity:{priority}</div>
-                    <div>
+                <div id="item">
+                    <div className="add-form">
+                        <label htmlFor="title" >Title</label>
+                        <input disabled onChange={handleChange} value={formData.title} required type="text" name="title" id="title" />
+                        <label htmlFor="description">Description</label>
+                        <input disabled onChange={handleChange} value={formData.description} required type="text" name="description" id="description" />
+                        <label  htmlFor="dueDate">Due Date</label>
+                        <input disabled onChange={handleChange} value={formData.dueDate} required type="date" name="dueDate" id="dueDate" />
+                        <div className="priority-conatiner">
+                            <div className='priority'>Priority</div>
+                    <div className="priority-toggle">
                         <div id="three" style={formData.priority > 1 ? { opacity: "1", color: color } : { opacity: "0" }} >-||-</div>
                         <div id="two" style={formData.priority > 0 ? { opacity: "1", color: color } : { opacity: "0" }}>-||-</div>
                         <div id="one" style={{ opacity: "1", color: color }}>-||-</div>
                     </div>
-                    <button onClick={deleteLocal}>Delete</button>
-                    <button onClick={editLocal}>Edit</button>
-                    <button onClick={complete}>Completed</button>
+                    </div>
+                    <button  className="deleteBtn" onClick={deleteLocal}>Delete</button>
+                    <button  className="editBtn" onClick={editLocal}>Edit</button>
+                    {completedValue !== "yes" ? <button onClick={complete}>Completed</button> : <button onClick={handleGiveBack}>Give Back</button>}
+                    </div>
                 </div>
             )
         }
     }
     return (
-        <div>
+        <>
             {determine()}
-        </div>
+        </>
 
     )
 }

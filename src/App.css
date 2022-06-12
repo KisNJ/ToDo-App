@@ -1,6 +1,10 @@
 *{
   margin:0;
   font-family: 'Roboto', sans-serif;  
+  box-sizing: border-box;
+}
+:root{
+  font-size: 20px;
 }
 #app{
   min-height: 100vh;
@@ -36,4 +40,146 @@ nav{
 #content{
   background-color: #f8fafc;
   z-index: 0;
+  display: flex;
+}
+nav{
+  padding-top:15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap:.8rem;
+}
+nav>button:not(.sub-buttons){
+  width: 80%;
+  height: 5ch;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+button{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  background-color: #0f172a;
+  color: #f8fafc;
+  padding: 8px;
+  font-size: 1rem;
+  border:2px solid #0f172a;
+  
+}
+button:hover{
+  background-color: #26364b;
+}
+.sub-buttons{
+  background-color: #182d58;
+  min-width:50%;
+  height: 5ch;
+}
+#content{
+  margin: 5px;
+ 
+}
+#item{
+  margin: 40px;
+  border:3px solid #0f172a;
+  border-radius: 5px;
+  padding: 10px;
+  background-color:#f8fafc;
+  width: 100%;
+  height: fit-content;
+  
+}
+#item button{
+  font-size: 1.2rem;
+  display: flex;
+  justify-content: center;
+}
+input{
+  margin:5px;
+  border-radius: 5px;
+  border: 1px solid #0f172a;
+  height: 5ch;
+  font-size: 1rem;
+}
+label:not(.title), .priority{
+  font-weight: 600;
+}
+.priority-conatiner{
+  display: flex;
+  gap: 1rem;
+  margin: 10px 0 10px 0;
+}
+.title{
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin: 5px;
+}
+.priority-toggle{
+  display: flex;
+}
+.add-form{
+  
+  margin: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit,1fr);
+}
+.add-form{
+  font-size: 1.3rem;
+  
+}
+.no-container{
+  display: grid;
+  justify-items: center;
+  height: fit-content;
+}
+.no-container-text{
+  display: grid;
+  justify-items: start;
+  height: fit-content;
+}
+.no-container>img{
+  width: 70%;
+  border-radius: 20px;
+}
+.no{
+  font-weight: bold;
+  margin: 20px;
+  margin-left: 40px;
+}
+.owl{
+  margin-top: 5px;
+  transition: border-radius 200ms ease-in;
+  transition: transform 400ms ease-in-out;
+  box-shadow: 2px 5px 9px 0px #0f172a;
+}
+.owl:hover{
+  transform: scale(1.05);
+  border-radius: 3px;
+}
+.deleteBtn{
+  margin-bottom: 10px;
+  background-color:  rgb(122, 135, 163);
+  border:#475569;
+}
+.editBtn{
+  margin-bottom: 10px;
+}
+.card-container{
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(400px,1fr));
+  gap: 20px;
+  
+}
+.card-container>div{
+  margin:0px !important;
+}
+.card{
+  
+}
+.card:hover{
+  transform: scale(1.05);
+}
+.all-container{
+  flex-grow: 1;
+  margin: 20px;
 }

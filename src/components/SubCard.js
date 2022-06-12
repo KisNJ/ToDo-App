@@ -6,12 +6,12 @@ export default function SubCard({ task, project,openProject,openTask }) {
                 openTask(task.id)
             }
             return(
-                <div onClick={openTaskLocal} style={{border:"1px solid black", margin:"10px", padding:"10px"}}>
-                    <div>
-                        <div style={{fontWeight:"bold", marginBottom:"5px"}}>{task.title}</div>
-                        <div>{task.description}</div>
-                        <div>Due date {task.dueDate}</div>
-                        <div>Priority {task.priority+1}</div>
+                <div onClick={openTaskLocal} id="item" className='card'>
+                    <div className='add-form'>
+                        <div style={{textTransform:"capitalize",fontWeight:"bold", marginBottom:"5px"}}>{task.title}</div>
+                        <div style={{marginTop:"15px",marginBottom:"15px"}}>{task.description}</div>
+                        <div><span style={{fontWeight:"bold"}}>Due date</span> {task.dueDate}</div>
+                        <div><span style={{fontWeight:"bold"}}>Priority </span>{task.priority+1}</div>
                     </div>
                 </div>
             )

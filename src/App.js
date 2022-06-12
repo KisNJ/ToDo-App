@@ -7,6 +7,7 @@ import ShowAllProjects from "./components/ShowAllProjects"
 import ShowAllTasks from './components/ShowAllTasks';
 import DisplayProject from './components/DisplayProject';
 import DisplayTask from './components/DisplayTask';
+
 export default function App() {
   const [render, setRender] = React.useState([]);
   const [tasks, setTasks] = React.useState([]);
@@ -28,7 +29,7 @@ export default function App() {
   function changeProjects(title, subTasks, priority) {
 
     setProjects(old => [...old, { mainTitle: title, ...subTasks, id: projects.length, priority: priority }])
-    setRender(<DisplayProject removeFromCompletedFullProject={removeFromCompletedFullProject}completedYesOrNo={subTasks.completed}completed={addToCompleted} mainTitle={title} subTasks={{ mainTitle: title, ...subTasks, id: projects.length }} keyOfThis={projects.length} priority={priority} saveChanges={saveChanges} deleteProject={deleteProject} />)
+    setRender(<DisplayProject removeFromCompletedFullProject={removeFromCompletedFullProject} completedYesOrNo={subTasks.completed} completed={addToCompleted} mainTitle={title} subTasks={{ mainTitle: title, ...subTasks, id: projects.length }} keyOfThis={projects.length} priority={priority} saveChanges={saveChanges} deleteProject={deleteProject} />)
   }
 
   React.useEffect(() => {
@@ -37,14 +38,14 @@ export default function App() {
       if (parseInt(tempProjects[i].id) === parseInt(deleted.id)) {
         let data = { ...deleted.data }
         data.mainTitle = deleted.mainTitle.mainTitle
-        tempProjects[i] = { id: deleted.id, mainTitle: deleted.mainTitle, ...data,priority:deleted.priority }
+        tempProjects[i] = { id: deleted.id, mainTitle: deleted.mainTitle, ...data, priority: deleted.priority }
       }
 
     }
     setProjects([...tempProjects])
   }, [deleted])
-  function saveChanges(id, data, mainTitle,priority) {
-    setDeleted({ id: id, data: data, mainTitle: mainTitle,priority:priority })
+  function saveChanges(id, data, mainTitle, priority) {
+    setDeleted({ id: id, data: data, mainTitle: mainTitle, priority: priority })
   }
 
   function add(id) {
@@ -61,24 +62,40 @@ export default function App() {
   }
   function taskOnCLick(id) {
     let task = tasks.find(x => parseInt(x.id) === parseInt(id))
-    const { title, description, dueDate, priority } = task;
+    const { title, description, dueDate, priority,completed } = task;
     //const toRender = <div>Title:{title} description:{description} dueDate:{dueDate} priotity:{priority}</div>
-    setRender(<DisplayTask title={title} description={description} dueDate={dueDate} priority={priority} id={id} edit={editTask} deleteT={deleteTask} />)
+    setRender(<DisplayTask removeFromCompletedTask={removeFromCompletedTask}CompletedTask={CompletedTask} completed={completed}title={title} description={description} dueDate={dueDate} priority={priority} id={id} edit={editTask} deleteT={deleteTask} />)
   }
   /*function handleEdit(data) {
     setTasks(old => old.map(x => x.id !== data.id ? old : data))
   }*/
-  function editTask(id, { title, description, dueDate, priority }) {
+  function editTask(id, { title, description, dueDate, priority},completed) {
     let temp = [...tasks]
     let changeThisOne = temp.filter(x => parseInt(x.id) === parseInt(id))
     let rest = temp.filter(x => parseInt(x.id) !== parseInt(id))
-    changeThisOne = { id, title, description, dueDate, priority }
+    changeThisOne = { id, title, description, dueDate, priority,completed }
     setTasks([...rest, changeThisOne])
-    setRender(<DisplayTask title={title} description={description} dueDate={dueDate} priority={priority} id={id} edit={editTask} deleteT={deleteTask} />)
+    setRender(<DisplayTask removeFromCompletedTask={removeFromCompletedTask}CompletedTask={CompletedTask} title={title} completed={completed} description={description} dueDate={dueDate} priority={priority} id={id} edit={editTask} deleteT={deleteTask} />)
+  }
+  
+  React.useEffect(() => {
+   
+    let temp = [...tasks]
+
+    for (let i = 0; i < temp.length; i++) {
+      if (temp[i].id === completedTasks.id) {
+        temp[i]["completed"] = "yes"
+      }
+    }
+
+    setTasks([...temp])
+  }, [completedTasks])
+  function CompletedTask(data) {
+    setCompletedTasks(data)
   }
   function openProject(e) {
     let project = projects.find(x => x.id === parseInt(e.target.id))
-    setRender(<DisplayProject removeFromCompletedFullProject={removeFromCompletedFullProject}completedYesOrNo={project.completed}completed={addToCompleted}mainTitle={project.mainTitle} subTasks={project} priority={project.priority} deleteProject={deleteProject} saveChanges={saveChanges} />)
+    setRender(<DisplayProject removeFromCompletedFullProject={removeFromCompletedFullProject} completedYesOrNo={project.completed} completed={addToCompleted} mainTitle={project.mainTitle} subTasks={project} priority={project.priority} deleteProject={deleteProject} saveChanges={saveChanges} />)
 
   }
   function deleteProject(value, id) {
@@ -87,49 +104,61 @@ export default function App() {
   function openTask(id) {
     let task = tasks.filter(x => parseInt(x.id) === parseInt(id))
     let t = task[0]
-    let { title, description, dueDate, priority } = t
-    setRender(<DisplayTask title={title} description={description} dueDate={dueDate} priority={priority} id={id} edit={editTask} deleteT={deleteTask} />)
+    let { title, description, dueDate, priority,completed } = t
+    setRender(<DisplayTask removeFromCompletedTask={removeFromCompletedTask}CompletedTask={CompletedTask} completed={completed}title={title} description={description} dueDate={dueDate} priority={priority} id={id} edit={editTask} deleteT={deleteTask} />)
   }
-  
-  React.useEffect(()=>{
-    let temp=[...projects]
-    
-    for(let i=0;i<temp.length;i++){
-      if(temp[i].id===completedProjects.id){
-        temp[i]["completed"]="yes"
+
+  React.useEffect(() => {
+    let temp = [...projects]
+
+    for (let i = 0; i < temp.length; i++) {
+      if (temp[i].id === completedProjects.id) {
+        temp[i]["completed"] = "yes"
+        temp[i]["task"] = "yes"
       }
     }
-    
-    setProjects([...temp])
-  },[completedProjects])
-  function addToCompleted(what,data){
-      if(what==="project"){
-       
-        let {mainTitle,subTasksLocal}=data
-       
-        let id=subTasksLocal.id
-        
-        
-        setCompletedProjects({id,subTasksLocal})
-        
-      }else{
 
-      }
-  }
-  function seeCompleted(){
-    let ps=[]
-    projects.forEach(x=>x.completed==="yes"?ps.push(x):"")
-    setRender(<ShowAllProjects openProject={openProject} projects={ps} c={"yes"}/>)
-  }
-  function removeFromCompletedFullProject(sub){
-    let temp=[...projects]
-    let id=sub.id
+    setProjects([...temp])
+  }, [completedProjects])
+  function removeFromCompletedTask(id){
+    let temp=[...tasks]
     for(let i=0;i<temp.length;i++){
-      if(temp[i].id===id){
+      if(temp[i].id===parseInt(id)){
         temp[i].completed="no"
       }
     }
-    console.log(temp)
+    setTasks([...temp])
+  }
+  function addToCompleted(what, data) {
+    if (what === "project") {
+
+      let { mainTitle, subTasksLocal } = data
+
+      let id = subTasksLocal.id
+
+
+      setCompletedProjects({ id, subTasksLocal })
+
+    } else {
+
+    }
+  }
+  function seeCompleted() {
+    let ps = []
+    projects.forEach(x => x.completed === "yes" ? ps.push(x) : "")
+    let ts=[]
+    tasks.forEach(x => x.completed === "yes" ? ts.push(x) : "")
+    setRender(<div><div style={{marginBottom:"20px",marginLeft:"40px",marginTop:"20px"}}>Completed Projects</div><ShowAllProjects openProject={openProject} projects={ps} c={"yes"} /><div style={{marginBottom:"20px",marginLeft:"40px",marginTop:"20px"}}>Completed Tasks</div><ShowAllTasks c={"yes"}tasks={ts} openTask={openTask}/></div>)
+  }
+  function removeFromCompletedFullProject(sub) {
+    let temp = [...projects]
+    let id = sub.id
+    for (let i = 0; i < temp.length; i++) {
+      if (temp[i].id === id) {
+        temp[i].completed = "no"
+      }
+    }
+    
     setProjects([...temp])
   }
   return (
@@ -143,15 +172,15 @@ export default function App() {
         <nav>
           <button onClick={() => setRender(<ShowAllTasks openTask={openTask} tasks={tasks} />)} style={{ display: "block" }}>Tasks</button>
           <button onClick={(e) => add(e.target.id)} id="add-task">Add task</button>
-
-          {tasks.length !== 0 ? tasks.map((x) => <div>
-            <button id={x.id} onClick={() => taskOnCLick(x.id)}>{x.title}</button>
-          </div>) : ""}
+          
+          {tasks.map((x) => x.completed !== "yes" ? <>
+            <button className="sub-buttons"id={x.id} onClick={() => taskOnCLick(x.id)}>{x.title}</button>
+          </>:"")}
           <button style={{ display: "block" }} onClick={() => setRender(<ShowAllProjects openProject={openProject} projects={projects} />)}>Projects</button>
           <button onClick={(e) => add(e.target.id)} id="add-project">Add project</button>
-          {projects.map(x => x.completed!=="yes"?<button id={x.id} onClick={openProject}>{x.mainTitle}</button>:"")}
+          {projects.map(x => x.completed !== "yes" ? <button className="sub-buttons" id={x.id} onClick={openProject}>{x.mainTitle}</button> : "")}
           <button onClick={seeCompleted}>Completed Tasks/Projects</button>
-          {projects.map(x => x.completed==="yes"?<button id={x.id} onClick={openProject}>{x.mainTitle}</button>:"")}
+          
         </nav>
         <div id='content'>
           {render}
