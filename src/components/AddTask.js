@@ -1,5 +1,7 @@
 import React from "react"
-
+import redCircle from '../svg/redCircle.svg'
+import greenCircle from '../svg/greenCircle.svg'
+import orangeCircle from '../svg/orangeCircle.svg'
 export default function Add(props) {
     const [formData, setFormData] = React.useState({
         title: "",
@@ -25,14 +27,18 @@ export default function Add(props) {
         setFormData(old => ({ ...old, priority: old.priority > 1 ? 0 : old.priority + 1 }))
     }
     let color
+    let img
     function whatColor() {
 
         if (formData.priority >= 2) {
             color = "red"
+            img=redCircle
         } else if (formData.priority >= 1) {
             color = "orange"
+            img=orangeCircle
         } else {
             color = "green"
+            img=greenCircle
         }
     }
     whatColor()
@@ -53,10 +59,10 @@ export default function Add(props) {
             
             <div className="priority-conatiner">
                 <div className="priority">Priority:</div>
-                <div className="priority-toggle" onClick={increasePriority}>
-                    <div id="one" style={{ opacity: "1", color: color }}>-||-</div>
-                    <div id="two" style={formData.priority > 0 ? { opacity: "1", color: color } : { opacity: "0" }}>-||-</div>
-                    <div id="three" style={formData.priority > 1 ? { opacity: "1", color: color } : { opacity: "0" }} >-||-</div>
+                <div className="priority-toggle pointer" onClick={increasePriority}>
+                    <div id="one" style={{ opacity: "1", color: color }}><img src={img} alt="" /></div>
+                    <div id="two" style={formData.priority > 0 ? { opacity: "1", color: color } : { opacity: "0" }}><img src={img} alt="" /></div>
+                    <div id="three" style={formData.priority > 1 ? { opacity: "1", color: color } : { opacity: "0" }} ><img src={img} alt="" /></div>
 
 
                 </div>

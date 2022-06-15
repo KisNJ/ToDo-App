@@ -1,7 +1,11 @@
 import React from 'react'
 import SubForm from './SubForm'
+import redCircle from '../svg/redCircle.svg'
+import greenCircle from '../svg/greenCircle.svg'
+import orangeCircle from '../svg/orangeCircle.svg'
+
 export default function DisplayProject({ subTasks, mainTitle, deleteProject, saveChanges, priority, keyOfThis, completed, removeFromCompletedFullProject, completedYesOrNo }) {
-    const notAllowed = ["mainTitle", "id", "priority", "completed"]
+    const notAllowed = ["mainTitle", "id", "priority", "completed","task"]
     const [subTasksLocal, setSubTasksLocal] = React.useState({ ...subTasks })
     const [tempTasks, setTempTasks] = React.useState();
     const [mainTitleValue, setMainTitleValue] = React.useState({ mainTitle: mainTitle });
@@ -9,6 +13,7 @@ export default function DisplayProject({ subTasks, mainTitle, deleteProject, sav
     const [pressedEdit, setPressedEdit] = React.useState(false)
     const [completedValue, setCompletedValue] = React.useState(completedYesOrNo)
     console.log(completedValue)
+
     function deleteTask(e) {
         setPressedEdit(true)
         let temp = { ...subTasksLocal }
@@ -57,8 +62,8 @@ export default function DisplayProject({ subTasks, mainTitle, deleteProject, sav
         }
         setTempTasks([...temp])
     }, [subTasksLocal])
-    function handleIndividualComplete(id, task) {
-        
+    /*function handleIndividualComplete(id, task) {
+
         if (task === "completed") {
             let temp = { ...subTasksLocal }
             for (let key in subTasksLocal) {
@@ -81,15 +86,27 @@ export default function DisplayProject({ subTasks, mainTitle, deleteProject, sav
             }
             setSubTasksLocal({ ...temp })
         }
-    }
+    }*/
 
     function taskCard({ title, description, dueDate, priority, id, completed }) {
         return (
-            <div style={completed === "yes" ? { backgroundColor: "gray" } : {}}>
-                <div>Title:{title} description:{description} dueDate:{dueDate}</div>
-                {completed !== "yes" ? <button onClick={() => handleIndividualComplete(id, "completed")}>Completed</button> : <button onClick={() => handleIndividualComplete(id, "giveBack")}>Give Back</button>}
-                <button id={id} onClick={deleteTask}>Delete Task</button>
-            </div>
+            title!==""?
+            <div id="item" style={{boxShadow:"1px 2px 4px #0f172a"}}>
+
+                <div>
+                    <div className='add-form'>
+                        <label htmlFor="title" >Title</label>
+                        <input disabled value={title} required type="text" name="title" id="title" />
+                        <label htmlFor="description">Description</label>
+                        <input disabled value={description} required type="text" name="description" id="description" />
+                        <label htmlFor="dueDate">Due Date</label>
+                        <input disabled value={dueDate} required type="date" name="dueDate" id="dueDate" />
+                        <button id={id} onClick={deleteTask} className="deleteBtn">Delete Task</button>
+                        {/*completed !== "yes" ? <button onClick={() => handleIndividualComplete(id, "completed")}>Completed</button> : <button onClick={() => handleIndividualComplete(id, "giveBack")}>Give Back</button>*/}
+                        
+                    </div>
+                </div>
+            </div>:""
         )
     }
     function deleteThisProject(e) {
@@ -103,7 +120,12 @@ export default function DisplayProject({ subTasks, mainTitle, deleteProject, sav
         let temp = { ...subTasksLocal }
         for (let key in temp) {
             if (!notAllowed.includes(key)) {
-                temp[key]["continue"] = "yes"
+                if("continue" in temp[key]){
+                    temp[key].continue = "yes"
+                }else{
+                    temp[key]["continue"] = "yes"
+                }
+                
             }
         }
         setSubTasksLocal({ ...temp })
@@ -117,8 +139,12 @@ export default function DisplayProject({ subTasks, mainTitle, deleteProject, sav
                 if (temp[key].continue === "yes") {
                     delete temp[key].continue
                 }
+                if (temp[key].title === "") {
+                    delete temp[key]
+                }
             }
         }
+       
         setSubTasksLocal({ ...temp })
         saveChanges(subTasks.id, subTasksLocal, mainTitleValue, priorityValue)
     }
@@ -172,14 +198,18 @@ export default function DisplayProject({ subTasks, mainTitle, deleteProject, sav
         completed("project", { mainTitleValue, subTasksLocal })
     }
     let color
+    let img
     function whatColor() {
 
         if (priorityValue >= 2) {
             color = "red"
+            img=redCircle
         } else if (priorityValue >= 1) {
             color = "orange"
+            img=orangeCircle
         } else {
             color = "green"
+            img=greenCircle
         }
     }
     whatColor()
@@ -194,23 +224,31 @@ export default function DisplayProject({ subTasks, mainTitle, deleteProject, sav
     function whatTitleToDisplay() {
         if (pressedEdit) {
             return (
-                <div>
+                <div className='add-form'>
                     <label htmlFor="mainTitle">Title</label>
-                    <input onChange={handleMainTitleChange} value={mainTitleValue.mainTitle} type="text" name="mainTitle" id="mainTitle" />
-                    <div onClick={increasePriority}>
-                        <div id="three" style={priorityValue > 1 ? { opacity: "1", color: color } : { opacity: "0" }} >-||-</div>
-                        <div id="two" style={priorityValue > 0 ? { opacity: "1", color: color } : { opacity: "0" }}>-||-</div>
-                        <div id="one" style={{ opacity: "1", color: color }}>-||-</div>
+                    <input onChange={handleMainTitleChange} value={mainTitleValue.mainTitle} type="text" className='main-title' name="mainTitle" id="mainTitle" />
+                    <div className="priority-conatiner">
+                        <div className='priority'>Priority</div>
+                        <div onClick={increasePriority} className="priority-toggle pointer">
+                            <div id="one" style={{ opacity: "1", color: color,border:"none" }}><img src={img} alt="" /></div>
+                            <div id="two" style={priorityValue > 0 ? { opacity: "1", color: color } : { opacity: "0" }}><img src={img} alt="" /></div>
+                            <div id="three" style={priorityValue > 1 ? { opacity: "1", color: color } : { opacity: "0" }} ><img src={img} alt="" /></div>
+                        </div>
                     </div>
                 </div>
             )
         }
         else {
-            return <div><div>{mainTitleValue.mainTitle}</div><div>Priority:</div> <div>
-                <div id="three" style={priorityValue > 1 ? { opacity: "1", color: color } : { opacity: "0" }} >-||-</div>
-                <div id="two" style={priorityValue > 0 ? { opacity: "1", color: color } : { opacity: "0" }}>-||-</div>
-                <div id="one" style={{ opacity: "1", color: color }}>-||-</div>
-            </div></div>
+            return <div>
+                <div className='main-title'>{mainTitleValue.mainTitle}</div>
+                <div className="priority-conatiner">
+                    <div className='priority'>Priority</div>
+                    <div  className="priority-toggle">
+                        <div id="one" style={{ opacity: "1", color: color }}><img src={img} alt="" /></div>
+                        <div id="two" style={priorityValue > 0 ? { opacity: "1", color: color } : { opacity: "0" }}><img src={img} alt="" /></div>
+                        <div id="three" style={priorityValue > 1 ? { opacity: "1", color: color } : { opacity: "0" }} ><img src={img} alt="" /></div>
+                    </div></div>
+            </div>
         }
 
     }
@@ -220,16 +258,18 @@ export default function DisplayProject({ subTasks, mainTitle, deleteProject, sav
     }
 
     return (
-        <div>
+        <div className='all-container'>
             {whatTitleToDisplay()}
             {tempTasks}
             <div id="buttons">
-                <button id={subTasks.id} onClick={deleteThisProject}>Delete Project</button>
-                <button onClick={Edit}>Edit</button>
+                <button id={subTasks.id} onClick={deleteThisProject} className='deleteBtn'>Delete Project</button>
+                <div className='subs'>
+                
                 <button onClick={addSubTask}>Add sub task</button>
                 {completedValue !== "yes" ? <button onClick={handleComplete}>Completed</button> : <button onClick={handleGiveBack}>Give back</button>}
                 {pressedEdit ? <button onClick={saveChangesLocal}>Save Changes</button> : ""}
-                {/*pressedEdit?<button>Save Changes</button>:""*/}
+                {!pressedEdit&&completedValue!=="yes"?<button onClick={Edit}>Edit</button>:""}
+                </div>
             </div>
         </div>
     )

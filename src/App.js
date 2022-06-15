@@ -10,8 +10,8 @@ import DisplayTask from './components/DisplayTask';
 
 export default function App() {
   const [render, setRender] = React.useState([]);
-  const [tasks, setTasks] = React.useState([]);
-  const [projects, setProjects] = React.useState([]);
+  const [tasks, setTasks] = React.useState(localStorage.getItem("tasks")?JSON.parse(localStorage.getItem("tasks")):[]);
+  const [projects, setProjects] = React.useState(localStorage.getItem("projects")?JSON.parse(localStorage.getItem("projects")):[]);
   const [deleted, setDeleted] = React.useState([]);
   const [completedProjects, setCompletedProjects] = React.useState([]);
   const [completedTasks, setCompletedTasks] = React.useState([]);
@@ -31,7 +31,12 @@ export default function App() {
     setProjects(old => [...old, { mainTitle: title, ...subTasks, id: projects.length, priority: priority }])
     setRender(<DisplayProject removeFromCompletedFullProject={removeFromCompletedFullProject} completedYesOrNo={subTasks.completed} completed={addToCompleted} mainTitle={title} subTasks={{ mainTitle: title, ...subTasks, id: projects.length }} keyOfThis={projects.length} priority={priority} saveChanges={saveChanges} deleteProject={deleteProject} />)
   }
-
+  React.useEffect(()=>{
+    localStorage.setItem("tasks",JSON.stringify(tasks))
+  },[tasks])
+  React.useEffect(()=>{
+    localStorage.setItem("projects",JSON.stringify(projects))
+  },[projects])
   React.useEffect(() => {
     let tempProjects = [...projects]
     for (let i = 0; i < tempProjects.length; i++) {

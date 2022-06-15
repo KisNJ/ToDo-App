@@ -12,13 +12,10 @@ export default function SubTask(props){
         const { id, value } = event.target
         setFormData((old) => ({ ...old, [id]: value }))
         //props.change(props.id,formData)
-        console.log(props.id)
     }
     
     function deleteSubTask(e){
         e.preventDefault();
-        console.log("delete")
-        console.log(props.id)
         props.removeSubTask(props.id)
     }
     return(

@@ -66,6 +66,7 @@ button{
   font-size: 1rem;
   border:2px solid #0f172a;
   
+  
 }
 button:hover{
   background-color: #26364b;
@@ -80,13 +81,14 @@ button:hover{
  
 }
 #item{
-  margin: 40px;
   border:3px solid #0f172a;
   border-radius: 5px;
   padding: 10px;
   background-color:#f8fafc;
-  width: 100%;
+  width: 90%;
   height: fit-content;
+  box-shadow: 1px 2px 4px #0f172a;
+  margin:10px auto 40px auto;
   
 }
 #item button{
@@ -101,13 +103,17 @@ input{
   height: 5ch;
   font-size: 1rem;
 }
-label:not(.title), .priority{
+label:not(.title), .priority,.main-title{
   font-weight: 600;
 }
 .priority-conatiner{
   display: flex;
   gap: 1rem;
   margin: 10px 0 10px 0;
+ align-items: center;
+}
+.pointer{
+  cursor: pointer;
 }
 .title{
   font-weight: bold;
@@ -148,7 +154,8 @@ label:not(.title), .priority{
 }
 .owl{
   margin-top: 5px;
-  transition: border-radius 200ms ease-in;
+  
+  transition: border-radius 900ms ease-in;
   transition: transform 400ms ease-in-out;
   box-shadow: 2px 5px 9px 0px #0f172a;
 }
@@ -160,9 +167,11 @@ label:not(.title), .priority{
   margin-bottom: 10px;
   background-color:  rgb(122, 135, 163);
   border:#475569;
+  margin-top: 10px;
 }
 .editBtn{
   margin-bottom: 10px;
+  
 }
 .card-container{
   display: grid;
@@ -174,12 +183,69 @@ label:not(.title), .priority{
   margin:0px !important;
 }
 .card{
-  
+  transition: transform 200ms ease-in-out;
 }
 .card:hover{
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 .all-container{
   flex-grow: 1;
-  margin: 20px;
+  margin: 20px 50px 50px 50px;
+  
+  
+}
+.secondary{
+  padding: 20px;
+  margin-bottom:50px;
+  border: 1px solid #0f172a;
+  border-radius: 5px;
+  box-shadow: 1px 2px 4px #0f172a;
+}
+.secondary button{
+  margin-top: 20px;
+}
+.secondary:hover{
+  background-color: #0f192e;
+  color: #f8fafc;
+  
+}
+.secondary:hover button{
+  background-color: #575d66;
+}
+.set-form{
+  display: flex;
+  gap:1rem;
+}
+.main-title{
+  font-size: 1.4rem;
+}
+input:focus {
+  box-shadow: 1px 1px 1px #0f172a;
+}
+button{
+  box-shadow: 1px 2px 4px #0f172a;
+  transition: transform 200ms ease-in-out;
+}
+button:hover{
+  transform: scale(1.03);
+}
+.subs{
+  display: flex;
+  gap:1rem
+}
+.subs button{
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+button,.secondary,.card{
+  cursor: pointer;
+}
+.priority-toggle img{
+  width: 30px;
+}
+.priority-toggle>div{
+  display: flex;
+  align-items: center;
+  color: rgb(131, 30, 30);
 }

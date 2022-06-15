@@ -4,10 +4,17 @@ import baby_owl from "../svg/baby_owl.webp"
 export default function ShowAllProjects({ projects,openProject,c }) {
     const[sorted,setSorted]=React.useState(false)
     const[tempProjects,setTempProjects]=React.useState([])
+    const notAllowed = ["mainTitle", "id", "priority", "completed"]
+    
+
     function sort(){
         setSorted(old=>!old)
+        
+
         if(!sorted){
-            setTempProjects([...projects])
+
+            setTempProjects([...projects.filter(x=>x.title!=="")])
+            
             setTempProjects(old=>old.sort((a,b)=>b.priority-a.priority))
         }else{
             setTempProjects([])
@@ -18,11 +25,11 @@ export default function ShowAllProjects({ projects,openProject,c }) {
         if (projects.length > 0) {
             return (
 
-                <div>
-                    <button onClick={sort}>Sort By Priority</button>
+                <div className='all-container'>
+                    <button style={{marginBottom:"20px",marginLeft:"40px",marginTop:"20px"}} onClick={sort}>Sort By Priority</button>
                     
-                    
-                    {c==="yes"?tempProjects.length>0?tempProjects.map(x=><SubCard openProject={openProject} project={x} />):projects.map(x=><SubCard openProject={openProject} project={x} />):tempProjects.length>0?tempProjects.map(x => x.completed!=="yes"?<SubCard openProject={openProject} project={x} />:""):projects.map(x => x.completed!=="yes"?<SubCard openProject={openProject} project={x} />:"")}
+                     
+                    <div className="card-container">{c==="yes"?tempProjects.length>0?tempProjects.map(x=><SubCard openProject={openProject} project={x} />):projects.map(x=><SubCard openProject={openProject} project={x} />):tempProjects.length>0?tempProjects.map(x => x.completed!=="yes"?<SubCard openProject={openProject} project={x} />:""):projects.map(x => x.completed!=="yes"?<SubCard openProject={openProject} project={x} />:"")}</div>
                 </div>
             )
         }
@@ -32,11 +39,11 @@ export default function ShowAllProjects({ projects,openProject,c }) {
             if (projects.length > 0) {
                 return (
     
-                    <div>
-                        <button onClick={sort}>Sort By Priority</button>
+                    <div className='all-container'>
+                        <button style={{marginBottom:"20px",marginLeft:"40px",marginTop:"20px"}} onClick={sort}>Sort By Priority</button>
                         
-                        
-                        {c==="yes"?tempProjects.length>0?tempProjects.map(x=><SubCard openProject={openProject} project={x} />):projects.map(x=><SubCard openProject={openProject} project={x} />):tempProjects.length>0?tempProjects.map(x => x.completed!=="yes"?<SubCard openProject={openProject} project={x} />:""):projects.map(x => x.completed!=="yes"?<SubCard openProject={openProject} project={x} />:"")}
+                       
+                        <div className="card-container">{c==="yes"?tempProjects.length>0?tempProjects.map(x=><SubCard openProject={openProject} project={x} />):projects.map(x=><SubCard openProject={openProject} project={x} />):tempProjects.length>0?tempProjects.map(x => x.completed!=="yes"?<SubCard openProject={openProject} project={x}/>:"" ):projects.map(x => x.completed!=="yes"?<SubCard openProject={openProject} project={x} />:"")}</div>
                     </div>
                 )
             }

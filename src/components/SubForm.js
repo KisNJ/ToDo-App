@@ -1,6 +1,7 @@
 import React from 'react'
 export default function SubForm(props) {
     let data;
+    
     if (props.basicData) {
         data={
             title: props.basicData.title,
@@ -48,7 +49,8 @@ export default function SubForm(props) {
     let whatToDisplay;
     if (display) {
         whatToDisplay = <div id={props.id}>
-            {props.id}
+            <div className="add-form secondary">
+
             <label htmlFor="title" >Title</label>
             <input onChange={handleChange} value={formData.title} type="text" name="title" id="title" />
             <label htmlFor="description">Description</label>
@@ -56,15 +58,16 @@ export default function SubForm(props) {
             <label htmlFor="dueDate">Due Date</label>
             <input onChange={handleChange} value={formData.dueDate} type="date" name="dueDate" id="dueDate" />
             <button id={props.id} onClick={deleteSubTask}>Delete Sub Task</button>
+            </div>
         </div>
     }
     else {
         whatToDisplay = <></>
     }
     return (
-        <div>
+        <>
             {whatToDisplay}
-        </div>
+        </>
 
 
     )
